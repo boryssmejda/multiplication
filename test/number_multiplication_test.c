@@ -27,7 +27,10 @@ static void null_test_success(void **state)
     perform_multiply_test("1", "1", "1");
     perform_multiply_test("5", "6", "30");
     perform_multiply_test("123", "456", "56088");
+    perform_multiply_test("9133", "0", "0");
+    perform_multiply_test("0", "9133", "0");
     perform_multiply_test("999", "999", "998001");
+    perform_multiply_test("140", "721", "100940");
 }
 
 int main(void)

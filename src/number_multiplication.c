@@ -1,6 +1,7 @@
 #include "number_multiplication.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -47,8 +48,6 @@ static char* multiply_by_single_digit(const char* const num, const char digit)
 
         carry = multiplication_result / 10;
         multiplication_result %= 10;
-
-        assert(multiplication_result >= 0 && multiplication_result <= 9);
 
         result[insertion_position_in_result++] = (char)(multiplication_result + '0');
     }
@@ -134,9 +133,12 @@ static void add_to_first_number(char* num1, const char* num2)
         carry = sum / 10;
         sum %= 10;
 
-        assert(sum >= 0 && sum < 10);
-
         num1[i] = (char)(sum + '0');
+    }
+
+    if (carry)
+    {
+        num1[strlen(num1)] = (char)(carry + '0');
     }
 }
 
@@ -177,11 +179,41 @@ static void deallocate_memory_for_multiplied_numbers(multiplied_numbers* numbers
     numbers->length = 0;
 }
 
+bool is_number_correct(const char* num)
+{
+    for (int i = 0; i < strlen(num); ++i)
+    {
+        if (!(num[i] >= '0' && num[i] <= '9'))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 char * multiply(char *num1, char *num2)
 {
     if (!num1 || !num2)
     {
         return NULL;
+    }
+
+    if (strlen(num1) == 0 || strlen(num2) == 0)
+    {
+        return NULL;
+    }
+
+    if(!is_number_correct(num1) || !is_number_correct(num2))
+    {
+        return NULL;
+    }
+
+    if (!strcmp(num1, "0") || !strcmp(num2, "0"))
+    {
+        char* multiplication_result = malloc(2 * sizeof(char));
+        strcpy(multiplication_result, "0");
+        return multiplication_result;
     }
 
     multiplied_numbers numbers = multiply_by_every_digit(num1, num2);
